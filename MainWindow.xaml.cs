@@ -21,6 +21,12 @@ namespace wpf3d
     /// </summary>
     public partial class MainWindow : Window
     {
+        // TODO: one for now, will have many
+        private TerrainTile tile;
+        private GeometryModel3D terrain;
+        private int x;
+        private int y;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,43 +36,73 @@ namespace wpf3d
         {
             Console.WriteLine("Window loaded");
 
-            cam.Position = new Point3D(600 * 90, 6000, 600 * 90);
+            CompositionTarget.Rendering += GameLoop;
+
+            tile = TerrainTile.FromFile(@"C:\Users\alank\git\aykay76\wpf3d\S02W079.hgt");
+
+            terrain = new GeometryModel3D();
+            terrain.Geometry = tile.GetMesh();
+            terrain.Material = new DiffuseMaterial(new SolidColorBrush(Colors.LightGray));
+            scene.Children.Add(terrain);
+
+            // adjust camera position to 2m above terrain at current point
+            short height = tile.GetHeight(600, 600);
+            cam.Position = new Point3D(600 * 90, height + 2, 600 * 90);
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void GameLoop(object sender, EventArgs e)
         {
-            if (e.Key == Key.W)
+            if (Keyboard.IsKeyDown(Key.W))
             {
                 Point3D camPos = cam.Position;
-                camPos += (cam.LookDirection * 30.0);
+                camPos += (cam.LookDirection * 90.0);
+
+                camPos.Y = tile.GetHeight((int)(camPos.X / 90.0), (int)(camPos.Z / 90.0)) + 100;
+
                 cam.Position = camPos;
             }
-            else if (e.Key == Key.A)
+            if (Keyboard.IsKeyDown(Key.A))
             {
                 Point3D camPos = cam.Position;
                 camPos -= (Vector3D.CrossProduct(cam.LookDirection, cam.UpDirection) * 90.0);
                 cam.Position = camPos;
             }
-            else if (e.Key == Key.D)
+            if (Keyboard.IsKeyDown(Key.D))
             {
                 Point3D camPos = cam.Position;
                 camPos += (Vector3D.CrossProduct(cam.LookDirection, cam.UpDirection) * 90.0);
                 cam.Position = camPos;
             }
-            else if (e.Key == Key.S)
+            if (Keyboard.IsKeyDown(Key.S))
             {
                 Point3D camPos = cam.Position;
-                camPos -= (cam.LookDirection * 30.0);
+                camPos -= (cam.LookDirection * 90.0);
                 cam.Position = camPos;
             }
-            else if (e.Key == Key.Left)
+            if (Keyboard.IsKeyDown(Key.Left))
             {
                 Rotate(-3.0);
             }
-            else if (e.Key == Key.Right)
+            if (Keyboard.IsKeyDown(Key.Right))
             {
                 Rotate(3.0);
             }
+            if (Keyboard.IsKeyDown(Key.Up))
+            {
+                Point3D camPos = cam.Position;
+                camPos.Y += 90.0;
+                cam.Position = camPos;
+            }
+            if (Keyboard.IsKeyDown(Key.Down))
+            {
+                Point3D camPos = cam.Position;
+                camPos.Y -= 90.0;
+                cam.Position = camPos;
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
         }
         public void Rotate(double d)
         {

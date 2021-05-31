@@ -12,47 +12,15 @@
     <Grid>
         <Viewport3D x:Name="viewport">
             <Viewport3D.Camera>
-                <PerspectiveCamera x:Name="cam" LookDirection="0,0,-1" UpDirection="0,1,0" FieldOfView="90">
-                    <!--<PerspectiveCamera.Transform>
-                        <Transform3DGroup>
-                            <RotateTransform3D x:Name="rot" CenterY="0" CenterX="0" CenterZ="0">
-                                <RotateTransform3D.Rotation>
-                                    <AxisAngleRotation3D x:Name="camRotation" Axis="0,1,0" Angle="0"/>
-                                </RotateTransform3D.Rotation>
-                            </RotateTransform3D>
-                            <TranslateTransform3D OffsetX="54000" OffsetY="6000" OffsetZ="54000">
-                                
-                            </TranslateTransform3D>
-                        </Transform3DGroup>
-                    </PerspectiveCamera.Transform>-->
-                </PerspectiveCamera>
+                <PerspectiveCamera x:Name="cam" LookDirection="0,0,-1" UpDirection="0,1,0" FieldOfView="90" />
             </Viewport3D.Camera>
 
             <ModelVisual3D>
                 <ModelVisual3D.Content>
-                    <Model3DGroup x:Name="model">
+                    <Model3DGroup x:Name="scene">
                         <DirectionalLight Color="LightGreen" Direction="0,-1,1"></DirectionalLight>
-
-                        <GeometryModel3D Geometry="{Binding Source={StaticResource terrain}, Path=Geometry}">
-                                <GeometryModel3D.Material>
-                                    <MaterialGroup>
-                                        <DiffuseMaterial Brush="LightGray"></DiffuseMaterial>
-                                    </MaterialGroup>
-                                </GeometryModel3D.Material>
-                            </GeometryModel3D>
                     </Model3DGroup>
                 </ModelVisual3D.Content>
-                <!--<ModelVisual3D.Transform>
-                    <Transform3DGroup>
-                        <RotateTransform3D>
-                            <RotateTransform3D.Rotation>
-                                <AxisAngleRotation3D x:Name="flyby" Axis="0,1,0" Angle="0" />
-                            </RotateTransform3D.Rotation>
-                        </RotateTransform3D>
-                        <TranslateTransform3D x:Name="position" OffsetX="-54000" OffsetY="-6000" OffsetZ="-54000">
-                        </TranslateTransform3D>
-                    </Transform3DGroup>
-                </ModelVisual3D.Transform>-->
             </ModelVisual3D>
         </Viewport3D>
     </Grid>
