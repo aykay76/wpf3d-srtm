@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wpf3d"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="800" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Background="LightSkyBlue">
+        Title="MainWindow" Height="800" Width="800" Loaded="Window_Loaded" KeyDown="Window_KeyDown" Background="Black">
     <Window.Resources>
         <local:TerrainMeshBuilder x:Key="terrain" />
     </Window.Resources>
     <Grid>
-        <Viewport3D x:Name="viewport">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Viewport3D x:Name="viewport" Grid.Row="1">
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="cam" LookDirection="0,0,-1" UpDirection="0,1,0" FieldOfView="90" />
             </Viewport3D.Camera>
@@ -18,10 +22,11 @@
             <ModelVisual3D>
                 <ModelVisual3D.Content>
                     <Model3DGroup x:Name="scene">
-                        <DirectionalLight Color="LightGreen" Direction="0,-1,1"></DirectionalLight>
+                        <DirectionalLight Color="Tan" Direction="0,-1,1"></DirectionalLight>
                     </Model3DGroup>
                 </ModelVisual3D.Content>
             </ModelVisual3D>
         </Viewport3D>
+        <Label x:Name="fps" Grid.Row="0" Content="123fps" Background="White"></Label>
     </Grid>
 </Window>

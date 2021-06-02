@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace wpf3d
         private GeometryModel3D terrain;
         private int x;
         private int y;
+        private Stopwatch timer;
+        private int frame = 0;
 
         public MainWindow()
         {
@@ -36,13 +39,15 @@ namespace wpf3d
         {
             Console.WriteLine("Window loaded");
 
+            timer = new Stopwatch();
+            timer.Start();
             CompositionTarget.Rendering += GameLoop;
 
             tile = TerrainTile.FromFile(@"C:\Users\alank\git\aykay76\wpf3d\S02W079.hgt");
 
             terrain = new GeometryModel3D();
             terrain.Geometry = tile.GetMesh();
-            terrain.Material = new DiffuseMaterial(new SolidColorBrush(Colors.LightGray));
+            terrain.Material = new DiffuseMaterial(new SolidColorBrush(Colors.White));
             scene.Children.Add(terrain);
 
             // adjust camera position to 2m above terrain at current point
@@ -52,6 +57,16 @@ namespace wpf3d
 
         private void GameLoop(object sender, EventArgs e)
         {
+            frame++;
+
+            if (timer.ElapsedMilliseconds >= 1000)
+            {
+                fps.Content = frame.ToString();
+                Console.WriteLine(frame);
+                timer.Restart();
+                frame = 0;
+            }
+
             if (Keyboard.IsKeyDown(Key.W))
             {
                 Point3D camPos = cam.Position;
