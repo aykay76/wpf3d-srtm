@@ -29,6 +29,8 @@ namespace wpf3d
         private int y;
         private Stopwatch timer;
         private int frame = 0;
+        private int cameraHeight = 100;
+        private int heading = 0;
 
         public MainWindow()
         {
@@ -51,8 +53,8 @@ namespace wpf3d
             scene.Children.Add(terrain);
 
             // adjust camera position to 2m above terrain at current point
-            short height = tile.GetHeight(600, 600);
-            cam.Position = new Point3D(600 * 90, height + 2, 600 * 90);
+            short terrainHeight = tile.GetHeight(600, 600);
+            cam.Position = new Point3D(600 * 90, terrainHeight + cameraHeight, 600 * 90);
         }
 
         private void GameLoop(object sender, EventArgs e)
@@ -70,9 +72,9 @@ namespace wpf3d
             if (Keyboard.IsKeyDown(Key.W))
             {
                 Point3D camPos = cam.Position;
-                camPos += (cam.LookDirection * 90.0);
+                camPos += (cam.LookDirection * 9.0);
 
-                camPos.Y = tile.GetHeight((int)(camPos.X / 90.0), (int)(camPos.Z / 90.0)) + 100;
+                camPos.Y = tile.GetHeight((int)(camPos.X / 90.0), (int)(camPos.Z / 90.0)) + cameraHeight;
 
                 cam.Position = camPos;
             }
@@ -96,11 +98,15 @@ namespace wpf3d
             }
             if (Keyboard.IsKeyDown(Key.Left))
             {
+                heading -= 3;
                 Rotate(-3.0);
+                bearing.Content = heading.ToString();
             }
             if (Keyboard.IsKeyDown(Key.Right))
             {
+                heading += 3;
                 Rotate(3.0);
+                bearing.Content = heading.ToString();
             }
             if (Keyboard.IsKeyDown(Key.Up))
             {
@@ -122,8 +128,7 @@ namespace wpf3d
         public void Rotate(double d)
         {
             double angleD = d;
-            Vector3D lookDirection = cam.LookDirection;
-
+            
             var m = new Matrix3D();
             m.Rotate(new Quaternion(cam.UpDirection, -angleD)); // Rotate about the camera's up direction to look left/right
             cam.LookDirection = m.Transform(cam.LookDirection);

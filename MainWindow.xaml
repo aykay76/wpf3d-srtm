@@ -14,7 +14,11 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Viewport3D x:Name="viewport" Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Viewport3D x:Name="viewport" Grid.Row="1" Grid.ColumnSpan="2">
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="cam" LookDirection="0,0,-1" UpDirection="0,1,0" FieldOfView="90" />
             </Viewport3D.Camera>
@@ -27,6 +31,7 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>
         </Viewport3D>
-        <Label x:Name="fps" Grid.Row="0" Content="123fps" Background="White"></Label>
+        <Label x:Name="fps" Grid.Row="0" Grid.Column="0" Content="123fps" Background="White"></Label>
+        <Label x:Name="bearing" Grid.Row="0" Grid.Column="1" Content="0 degrees" Background="White"></Label>
     </Grid>
 </Window>
