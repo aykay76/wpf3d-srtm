@@ -12,8 +12,8 @@ namespace wpf3d
     class TerrainTile
     {
         private short[] heights;
-        private int xSize = 1201;
-        private int zSize = 1201;
+        private int xSize = 1200;
+        private int zSize = 1200;
         private int spacing = 90;
 
         public static TerrainTile FromFile(string filename)
@@ -33,35 +33,42 @@ namespace wpf3d
 
         public short GetHeight(int x, int z)
         {
-            return heights[z * 1201 + x];
+            return heights[(z * (xSize + 1)) + x];
         }
 
-        public MeshGeometry3D GetMesh()
+        public MeshGeometry3D GetMesh(int fidelity)
         {
+            if (fidelity < 1 || fidelity > 6)
+            {
+                throw new InvalidDataException("Fidelity must be between 1 and 6 inclusive.");
+            }
+
             var mesh = new MeshGeometry3D();
 
-            mesh.Positions = new Point3DCollection(xSize * zSize);
-            mesh.TriangleIndices = new Int32Collection((xSize - 1) * (zSize - 1) * 6);
+            mesh.Positions = new Point3DCollection((xSize / fidelity + 1) * (zSize / fidelity + 1));
+            mesh.TriangleIndices = new Int32Collection(xSize * zSize / fidelity * 6);
 
-            int h = 0;
-            for (int z = 0; z < zSize; z++)
+            int z = 0;
+            int x = 0;
+            for (z = 0; z <= zSize; z += fidelity)
             {
-                for (int x = 0; x < xSize; x++)
+                for (x = 0; x <= xSize; x += fidelity)
                 {
-                    short y = heights[h++];
+                    short y = GetHeight(x, z);
                     if (y < 0) y = -10;
 
                     mesh.Positions.Add(new Point3D(x * spacing, y, z * spacing));
+                    Console.WriteLine($"{x}, {z}");
                 }
             }
 
             int v = 0;
-            for (int x = 0; x < xSize - 1; x++)
+            for (x = 0; x < xSize / fidelity; x++)
             {
-                for (int z = 0; z < zSize - 1; z++)
+                for (z = 0; z < zSize / fidelity; z++)
                 {
-                    mesh.TriangleIndices.Add(v); mesh.TriangleIndices.Add(v + xSize); mesh.TriangleIndices.Add(v + 1);
-                    mesh.TriangleIndices.Add(v + 1); mesh.TriangleIndices.Add(v + xSize); mesh.TriangleIndices.Add(v + xSize + 1);
+                    mesh.TriangleIndices.Add(v); mesh.TriangleIndices.Add(v + (xSize / fidelity) + 1); mesh.TriangleIndices.Add(v + 1);
+                    mesh.TriangleIndices.Add(v + 1); mesh.TriangleIndices.Add(v + (xSize / fidelity) + 1); mesh.TriangleIndices.Add(v + (xSize / fidelity) + 2);
 
                     v++;
                 }

@@ -48,7 +48,7 @@ namespace wpf3d
             tile = TerrainTile.FromFile(@"C:\Users\alank\git\aykay76\wpf3d\S02W079.hgt");
 
             terrain = new GeometryModel3D();
-            terrain.Geometry = tile.GetMesh();
+            terrain.Geometry = tile.GetMesh(6);
             terrain.Material = new DiffuseMaterial(new SolidColorBrush(Colors.White));
             scene.Children.Add(terrain);
 
